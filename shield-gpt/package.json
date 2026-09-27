@@ -1,0 +1,17 @@
+{
+  "name": "shield-gpt",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension that warns before sensitive data is sent to ChatGPT or Claude.",
+  "scripts": {
+    "test": "node scripts/test-patterns.mjs",
+    "validate": "node scripts/validate-extension.mjs && npm run test"
+  },
+  "keywords": [
+    "chrome-extension",
+    "privacy",
+    "chatgpt",
+    "claude"
+  ],
+  "license": "MIT"
+}

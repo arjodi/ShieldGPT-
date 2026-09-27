@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Shield GPT",
+  "short_name": "Shield GPT",
+  "version": "0.1.0",
+  "description": "Warns before sensitive data is sent to ChatGPT or Claude and can replace it with safe random values.",
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://claude.ai/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://claude.ai/*"
+      ],
+      "js": [
+        "src/patterns.js",
+        "src/dom.js",
+        "src/panel.js",
+        "src/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
