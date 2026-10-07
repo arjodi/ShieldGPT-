@@ -1,0 +1,140 @@
+[
+  {
+    "id": "BUG-01",
+    "bugNumber": 1,
+    "title": "Prompt Injection Case-Sensitivity Evasion",
+    "category": "Logical",
+    "severity": "Critical",
+    "flawedLineNumbers": [
+      14
+    ],
+    "flawedSnippet": "const promptInjectionPattern = /ignore\\s+previous\\s+instructions/;\nif (promptInjectionPattern.test(prompt)) {",
+    "fixedSnippet": "private static readonly INJECTION_PATTERN = /ignore\\s+previous\\s+instructions/i;\nif (ShieldSecurityGuard.INJECTION_PATTERN.test(processedPrompt)) {",
+    "symptom": "Attack prompts using uppercase (e.g., \"IGNORE PREVIOUS INSTRUCTIONS\") completely bypass detection.",
+    "rootCause": "RegExp literal lacks the \"i\" flag, enforcing strict lowercase ASCII matching only.",
+    "fixStrategy": "Append the \"i\" modifier and precompile to an immutable static pattern.",
+    "detectionTestId": "TEST-01",
+    "verified": true
+  },
+  {
+    "id": "BUG-02",
+    "bugNumber": 2,
+    "title": "Off-By-One Boundary Truncation in Token Window",
+    "category": "Boundary / Null",
+    "severity": "High",
+    "flawedLineNumbers": [
+      25
+    ],
+    "flawedSnippet": "const chunk = tokens.slice(i, i + windowSize - 1).join(' ');",
+    "fixedSnippet": "const chunk = tokens.slice(i, i + windowSize).join(' ');",
+    "symptom": "Substrings spanning window boundaries (e.g., 3-word trigger phrases) miss the 3rd word and are ignored.",
+    "rootCause": "Array.prototype.slice end argument is non-inclusive; subtracting 1 causes only 2 tokens to be taken instead of 3.",
+    "fixStrategy": "Pass (i, i + windowSize) so that exactly 3 tokens are extracted in each sliding step.",
+    "detectionTestId": "TEST-02",
+    "verified": true
+  },
+  {
+    "id": "BUG-03",
+    "bugNumber": 3,
+    "title": "String Coercion Arithmetic on Cumulative Risk Score",
+    "category": "Type Coercion",
+    "severity": "High",
+    "flawedLineNumbers": [
+      18,
+      19
+    ],
+    "flawedSnippet": "const ruleWeight: any = '40';\nriskScore += ruleWeight; // result is \"040\"",
+    "fixedSnippet": "const ruleWeight = 40;\nnumericRiskScore += ruleWeight;",
+    "symptom": "Risk score becomes string concatenation (\"040\"), distorting arithmetic comparisons and evaluation thresholds.",
+    "rootCause": "Weakly typed dynamic addition where numeric 0 concatenated with string \"40\" yields \"040\" rather than 40.",
+    "fixStrategy": "Enforce strict TypeScript numeric types (number) and explicit integer addition.",
+    "detectionTestId": "TEST-03",
+    "verified": true
+  },
+  {
+    "id": "BUG-04",
+    "bugNumber": 4,
+    "title": "Null Pointer Dereference on Missing Metadata",
+    "category": "Boundary / Null",
+    "severity": "Critical",
+    "flawedLineNumbers": [
+      7
+    ],
+    "flawedSnippet": "if (context.metadata.environment === 'strict') {",
+    "fixedSnippet": "const env = context?.metadata?.environment ?? 'standard';",
+    "symptom": "Calling sanitizePrompt without context or with context: {} throws uncaught TypeError: Cannot read properties of undefined.",
+    "rootCause": "Direct deep property access on optional parameter without optional chaining or defensive falsy check.",
+    "fixStrategy": "Use optional chaining context?.metadata?.environment with nullish coalescing default value fallback.",
+    "detectionTestId": "TEST-04",
+    "verified": true
+  },
+  {
+    "id": "BUG-05",
+    "bugNumber": 5,
+    "title": "Catastrophic ReDoS Backtracking in Malicious Regex",
+    "category": "Security / ReDoS",
+    "severity": "Critical",
+    "flawedLineNumbers": [
+      3
+    ],
+    "flawedSnippet": "private static MALICIOUS_PAYLOAD_REGEX = /^([a-zA-Z0-9]+)*$/;",
+    "fixedSnippet": "// Removed polynomial nested quantifier. Replaced with linear O(N) scanner.",
+    "symptom": "Processing a 30-character repetitive malicious string hangs Node.js/Vite thread with 100% CPU usage.",
+    "rootCause": "Nested unbounded quantifiers (a+)* trigger exponential backtracking O(2^N) permutations on non-matching suffix.",
+    "fixStrategy": "Flatten regular expression into deterministic linear pattern and add max input length boundary guard.",
+    "detectionTestId": "TEST-05",
+    "verified": true
+  },
+  {
+    "id": "BUG-06",
+    "bugNumber": 6,
+    "title": "Inverted Boolean Gate on Admin Whitelist Authorization",
+    "category": "Logical",
+    "severity": "Critical",
+    "flawedLineNumbers": [
+      44
+    ],
+    "flawedSnippet": "const isSafe = isWhitelistedUser ? riskScore > 50 : riskScore < 50;",
+    "fixedSnippet": "const isAdmin = context?.userRole === 'admin';\nconst isSafe = isAdmin ? numericRiskScore < 80 : numericRiskScore < 50;",
+    "symptom": "Admin users with safe score (e.g. 0) are incorrectly rejected (isSafe = false), while malicious admins pass!",
+    "rootCause": "Ternary condition has inverted branch logic (riskScore > 50 evaluated as safe for admins).",
+    "fixStrategy": "Correct the comparison operators: admins are permitted elevated threshold (score < 80) vs standard users (score < 50).",
+    "detectionTestId": "TEST-06",
+    "verified": true
+  },
+  {
+    "id": "BUG-07",
+    "bugNumber": 7,
+    "title": "Global Regex lastIndex Mutation Flaw (State Leak)",
+    "category": "Logical",
+    "severity": "High",
+    "flawedLineNumbers": [
+      2,
+      32
+    ],
+    "flawedSnippet": "private static API_KEY_REGEX = /AIza[0-9A-Za-z-_]{35}/g;\n...\nif (ShieldSecurityGuard.API_KEY_REGEX.test(prompt))",
+    "fixedSnippet": "private static readonly API_KEY_PATTERN = /AIza[0-9A-Za-z-_]{35}/; // Non-global RegExp",
+    "symptom": "Consecutive identical calls with valid API keys alternate between true and false!",
+    "rootCause": "RegExp with global (/g) flag retains stateful lastIndex pointer across subsequent .test() executions.",
+    "fixStrategy": "Remove the global flag for boolean tests or reset lastIndex = 0 before execution.",
+    "detectionTestId": "TEST-07",
+    "verified": true
+  },
+  {
+    "id": "BUG-08",
+    "bugNumber": 8,
+    "title": "Single-Occurrence Replacement PII Data Leak",
+    "category": "Logical",
+    "severity": "Medium",
+    "flawedLineNumbers": [
+      38
+    ],
+    "flawedSnippet": "sanitized = sanitized.replace(/\\d{4}-\\d{4}-\\d{4}-\\d{4}/, '****-****-****-****');",
+    "fixedSnippet": "sanitized = sanitized.replace(/\\b\\d{4}-\\d{4}-\\d{4}-\\d{4}\\b/g, '****-****-****-****');",
+    "symptom": "Prompts containing multiple credit card numbers only redact the first card, leaking the rest!",
+    "rootCause": "String.prototype.replace with non-global regex only replaces the first occurrence.",
+    "fixStrategy": "Use global flag /g with word boundaries \\b to mask all instances in the payload.",
+    "detectionTestId": "TEST-08",
+    "verified": true
+  }
+]

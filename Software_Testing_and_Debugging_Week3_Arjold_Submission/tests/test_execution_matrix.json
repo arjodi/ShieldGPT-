@@ -1,0 +1,66 @@
+[
+  {
+    "testId": "TEST-01",
+    "name": "Detect Case-Insensitive Prompt Injection",
+    "category": "Prompt Injection",
+    "targetBug": "BUG-01",
+    "flawedStatus": "FAILED (Defect caught as expected)",
+    "refactoredStatus": "PASSED (100% verified)"
+  },
+  {
+    "testId": "TEST-02",
+    "name": "Window Chunking Boundary Phrase Detection",
+    "category": "Token Boundary",
+    "targetBug": "BUG-02",
+    "flawedStatus": "FAILED (Defect caught as expected)",
+    "refactoredStatus": "PASSED (100% verified)"
+  },
+  {
+    "testId": "TEST-03",
+    "name": "Strict Numeric Arithmetic on Risk Calculation",
+    "category": "Type Safety",
+    "targetBug": "BUG-03",
+    "flawedStatus": "FAILED (Defect caught as expected)",
+    "refactoredStatus": "PASSED (100% verified)"
+  },
+  {
+    "testId": "TEST-04",
+    "name": "Null Safety on Undefined Context Metadata",
+    "category": "Input Validation",
+    "targetBug": "BUG-04",
+    "flawedStatus": "FAILED (Defect caught as expected)",
+    "refactoredStatus": "PASSED (100% verified)"
+  },
+  {
+    "testId": "TEST-05",
+    "name": "Catastrophic ReDoS Backtracking Resilience",
+    "category": "Performance & ReDoS",
+    "targetBug": "BUG-05",
+    "flawedStatus": "FAILED (Defect caught as expected)",
+    "refactoredStatus": "PASSED (100% verified)"
+  },
+  {
+    "testId": "TEST-06",
+    "name": "Admin Whitelist Authorization Gate Logic",
+    "category": "Prompt Injection",
+    "targetBug": "BUG-06",
+    "flawedStatus": "FAILED (Defect caught as expected)",
+    "refactoredStatus": "PASSED (100% verified)"
+  },
+  {
+    "testId": "TEST-07",
+    "name": "Stateless Idempotency on Consecutive Regex Tests",
+    "category": "Type Safety",
+    "targetBug": "BUG-07",
+    "flawedStatus": "FAILED (Defect caught as expected)",
+    "refactoredStatus": "PASSED (100% verified)"
+  },
+  {
+    "testId": "TEST-08",
+    "name": "Multiple Credit Card PII Global Redaction",
+    "category": "Data Redaction",
+    "targetBug": "BUG-08",
+    "flawedStatus": "FAILED (Defect caught as expected)",
+    "refactoredStatus": "PASSED (100% verified)"
+  }
+]

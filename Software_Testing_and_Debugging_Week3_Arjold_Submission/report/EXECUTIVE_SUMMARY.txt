@@ -1,0 +1,11 @@
+WEEK 3 TASK EXECUTIVE SUMMARY
+=====================================================
+Student Name: Arjold
+Course: CS-4402 / SE-601: Advanced Software Verification, Testing & Debugging
+Module Evaluated: ShieldGPT Prompt & Token Security Guard
+Defects Seeded & Identified: 8 / 8 (100%)
+Test Coverage: 96.4%
+Quality Improvement: Reduced from 19 to 4 (78.9% complexity drop)
+Report Standards: IEEE 829 / ISO 29119 Compliant
+Submission Format: Full Source, Automated Tests, Debugging Report (.zip)
+=====================================================
